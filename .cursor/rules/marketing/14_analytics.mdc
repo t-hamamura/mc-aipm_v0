@@ -1,0 +1,23 @@
+---
+description: "分析レイヤー"
+---
+
+# L5: 分析レイヤー
+
+## 効果測定
+questions:
+  - 測定対象は？
+  - KPIは？
+  - 期間は？
+
+template: |
+  # 分析レポート
+  
+  ## 結果
+  {{results}}
+  
+  ## インサイト
+  {{insights}}
+  
+  ## 改善提案
+  {{recommendations}}

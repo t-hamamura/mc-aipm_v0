@@ -1,0 +1,24 @@
+---
+description: "企画レイヤー"
+---
+
+# L2: 企画レイヤー
+
+## キャンペーン企画
+questions:
+  - キャンペーン名は？
+  - 目的は？
+  - 予算は？
+  - 期間は？
+
+template: |
+  # {{campaign_name}}
+  
+  ## 目的
+  {{purpose}}
+  
+  ## 予算
+  {{budget}}
+  
+  ## スケジュール
+  {{schedule}}

@@ -1,0 +1,10 @@
+brand:
+  name: "{{brand_name}}"
+  created: "{{date}}"
+  status: "active"
+contacts: []
+projects:
+  active: []
+  completed: []
+kpis: {}
+notes: ""

@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "_backup": true,
+    "**/.gitkeep": true
+  },
+  "search.exclude": {
+    "_backup/**": true,
+    "workspace/projects/done/**": true
+  },
+  "editor.wordWrap": "on",
+  "markdown.preview.breaks": true
+}
