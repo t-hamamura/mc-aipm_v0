@@ -1,10 +1,11 @@
 #!/bin/bash
 #============================================================
 # setup_workspace.sh
-# ─ マーケティング・コンサルティング特化AIPMシステム
-#   完全自動セットアップスクリプト
+# ─ マーケティング・コンサルティング特化AIPMシステム v2.0
+#   完全自動セットアップスクリプト（改変版）
 # 
 # このスクリプト1つですべての環境を構築します
+# 情報連動型アーキテクチャ・段階的承認システム・動的ルール拡張システム対応
 #============================================================
 
 set -e
@@ -43,6 +44,7 @@ main() {
     clear
     echo "╔════════════════════════════════════════════════════════╗"
     echo "║   マーケティング・コンサルティング特化 AIPMシステム    ║"
+    echo "║                    v2.0 改変版                        ║"
     echo "║              自動セットアップスクリプト                 ║"
     echo "╚════════════════════════════════════════════════════════╝"
     echo
@@ -56,10 +58,11 @@ main() {
     # 確認
     if [ "${AUTO_APPROVE:-false}" != "true" ]; then
         echo -e "${YELLOW}このスクリプトは以下を実行します:${NC}"
-        echo "  • ディレクトリ構造の作成"
-        echo "  • ルールファイルの生成"
-        echo "  • テンプレートの配置"
-        echo "  • スクリプトの生成"
+        echo "  • 改変版ディレクトリ構造の作成"
+        echo "  • 動的ルール拡張システムの構築"
+        echo "  • 段階的承認フローの設定"
+        echo "  • 情報連動システムの初期化"
+        echo "  • Notion連携機能の準備"
         echo
         read -p "続行しますか？ (y/n): " confirm
         if [[ "$confirm" != [yY] ]]; then
@@ -69,47 +72,53 @@ main() {
     fi
     
     echo
-    TOTAL_STEPS=7
+    TOTAL_STEPS=8
     CURRENT_STEP=0
     
-    # Step 1: ディレクトリ構造
-    log_section "Step 1/7: ディレクトリ構造の作成"
+    # Step 1: 改変版ディレクトリ構造
+    log_section "Step 1/8: 改変版ディレクトリ構造の作成"
     create_directory_structure
     ((CURRENT_STEP++))
     show_progress $CURRENT_STEP $TOTAL_STEPS
     
-    # Step 2: コアルール
-    log_section "Step 2/7: コアルールファイルの生成"
-    create_core_rules
+    # Step 2: 基本ルール
+    log_section "Step 2/8: 基本ルールファイルの生成"
+    create_basic_rules
     ((CURRENT_STEP++))
     show_progress $CURRENT_STEP $TOTAL_STEPS
     
     # Step 3: マーケティングルール
-    log_section "Step 3/7: マーケティングルールの生成"
+    log_section "Step 3/8: マーケティングルールの生成"
     create_marketing_rules
     ((CURRENT_STEP++))
     show_progress $CURRENT_STEP $TOTAL_STEPS
     
-    # Step 4: テンプレート
-    log_section "Step 4/7: テンプレートの配置"
-    create_templates
+    # Step 4: ワークフロールール
+    log_section "Step 4/8: ワークフロールールの生成"
+    create_workflow_rules
     ((CURRENT_STEP++))
     show_progress $CURRENT_STEP $TOTAL_STEPS
     
-    # Step 5: スクリプト
-    log_section "Step 5/7: 管理スクリプトの生成"
+    # Step 5: システムテンプレート
+    log_section "Step 5/8: システムテンプレートの配置"
+    create_system_templates
+    ((CURRENT_STEP++))
+    show_progress $CURRENT_STEP $TOTAL_STEPS
+    
+    # Step 6: 管理スクリプト
+    log_section "Step 6/8: 管理スクリプトの生成"
     create_scripts
     ((CURRENT_STEP++))
     show_progress $CURRENT_STEP $TOTAL_STEPS
     
-    # Step 6: 初期ファイル
-    log_section "Step 6/7: 初期ファイルの作成"
+    # Step 7: 初期ファイル
+    log_section "Step 7/8: 初期ファイルの作成"
     create_initial_files
     ((CURRENT_STEP++))
     show_progress $CURRENT_STEP $TOTAL_STEPS
     
-    # Step 7: VSCode設定
-    log_section "Step 7/7: エディタ設定"
+    # Step 8: エディタ設定
+    log_section "Step 8/8: エディタ設定"
     setup_vscode
     ((CURRENT_STEP++))
     show_progress $CURRENT_STEP $TOTAL_STEPS
@@ -118,24 +127,39 @@ main() {
     show_completion_message
 }
 
-# ディレクトリ構造作成
+# 改変版ディレクトリ構造作成
 create_directory_structure() {
     local dirs=(
-        "workspace/projects/active"
-        "workspace/projects/done"
-        "workspace/operations"
-        "brands/_template/guidelines"
-        "brands/_template/proposals"
-        "brands/_template/metrics"
-        "knowledge/_index"
+        # .cursor/rules/ 構造
+        ".cursor/rules/basic"
+        ".cursor/rules/marketing"
+        ".cursor/rules/workflows"
+        
+        # .system/ 構造
+        ".system/templates"
+        ".system/config"
+        
+        # brands/ 構造（連動型）
+        "brands/_template/knowledge"
+        "brands/_template/projects"
+        
+        # projects/ 構造（統一）
+        "projects"
+        
+        # knowledge/ 構造
         "knowledge/items"
         "knowledge/templates"
-        "exports/reports"
-        "exports/guidelines"
-        "exports/presentations"
-        ".cursor/rules/core"
-        ".cursor/rules/marketing"
+        
+        # exports/ 構造
+        "exports/notion/pages"
+        "exports/documents/reports"
+        "exports/documents/guidelines"
+        "exports/documents/presentations"
+        
+        # scripts/ 構造
         "scripts"
+        
+        # backup
         "_backup"
     )
     
@@ -145,10 +169,10 @@ create_directory_structure() {
     done
 }
 
-# コアルール作成
-create_core_rules() {
+# 基本ルール作成
+create_basic_rules() {
     # マスタールール
-    cat > .cursor/rules/core/00_master_rules.mdc << 'EOF'
+    cat > .cursor/rules/basic/00_master_rules.mdc << 'EOF'
 ---
 description: "マーケティング・コンサルティング特化 マスタールール"
 ---
@@ -202,7 +226,7 @@ description: "マーケティング・コンサルティング特化 マスタ�
 EOF
     
     # パス定義
-    cat > .cursor/rules/core/paths.mdc << 'EOF'
+    cat > .cursor/rules/basic/01_paths.mdc << 'EOF'
 ---
 description: "システムパス定義"
 ---
@@ -228,7 +252,53 @@ exports:
   root: "{{project_root}}/exports"
 EOF
     
-    log_success "コアルール生成完了"
+    # 段階的承認フロー
+    cat > .cursor/rules/basic/02_approval_flow.mdc << 'EOF'
+---
+description: "段階的承認フロー定義"
+---
+
+# 段階的承認フロー
+
+## 基本フロー
+1. 作業開始 → 計画提案
+2. 計画承認 → 実行開始
+3. 中間レビュー → 改善提案
+4. 完了承認 → 情報連動
+
+## 承認タイプ
+- required: 必須承認
+- optional: 任意承認
+- auto: 自動進行
+
+## ユーザー確認
+- 各段階で必ず確認を取る
+- 承認なしでは次段階に進まない
+- 承認後は自動で次段階実行
+EOF
+
+    # 動的ルール拡張
+    cat > .cursor/rules/basic/03_dynamic_rules.mdc << 'EOF'
+---
+description: "動的ルール拡張システム"
+---
+
+# 動的ルール拡張システム
+
+## 類似度ベース判定
+1. 未知のトリガーワード検出
+2. 既存ルールとの類似度計算
+3. 類似度が低い場合、新ルール提案
+4. ユーザー承認後にルール追加
+
+## 提案フォーマット
+- 類似ルールの提示
+- 新ルールの内容説明
+- カテゴリ分類の提案
+- 承認/拒否の選択肢
+EOF
+    
+    log_success "基本ルール生成完了"
 }
 
 # マーケティングルール作成
@@ -398,8 +468,82 @@ EOF
     log_success "マーケティングルール生成完了"
 }
 
-# テンプレート作成
-create_templates() {
+# ワークフロールール作成
+create_workflow_rules() {
+    # プロジェクトフロー
+    cat > .cursor/rules/workflows/20_project_flow.mdc << 'EOF'
+---
+description: "統一プロジェクトフロー"
+---
+
+# 統一プロジェクトフロー
+
+## プロジェクト構造
+projects/{date}_{type}_{name}/
+├── 01_planning/     # 計画段階
+├── 02_execution/    # 実行段階
+├── 03_review/       # レビュー段階
+└── 04_completion/   # 完了段階
+
+## 段階別処理
+1. planning: 計画策定・承認
+2. execution: 実行・進捗管理
+3. review: レビュー・改善
+4. completion: 完了・情報連動
+EOF
+
+    # ブランド情報更新
+    cat > .cursor/rules/workflows/21_brand_update.mdc << 'EOF'
+---
+description: "ブランド情報自動更新"
+---
+
+# ブランド情報自動更新
+
+## 更新タイミング
+- プロジェクト完了時
+- 調査結果取得時
+- ナレッジ追加時
+
+## 更新対象
+- profile.yaml
+- knowledge/
+- projects/
+
+## 連動処理
+1. プロジェクト情報抽出
+2. ブランド情報更新
+3. ナレッジ統合
+4. 履歴記録
+EOF
+
+    # Notion出力
+    cat > .cursor/rules/workflows/22_notion_export.mdc << 'EOF'
+---
+description: "Notion連携出力"
+---
+
+# Notion連携出力
+
+## 出力形式
+- ページ形式
+- マークダウン準拠
+- 構造化データ
+
+## 出力タイミング
+- ドキュメント作成時
+- プロジェクト完了時
+- 定期レポート時
+
+## 出力先
+exports/notion/pages/
+EOF
+    
+    log_success "ワークフロールール生成完了"
+}
+
+# システムテンプレート作成
+create_system_templates() {
     # 記事テンプレート
     cat > knowledge/templates/article.md << 'EOF'
 # {{title}}
@@ -458,7 +602,63 @@ EOF
 {{next_actions}}
 EOF
     
-    log_success "テンプレート配置完了"
+    # システムテンプレート
+    cat > .system/templates/project_structure.md << 'EOF'
+# プロジェクト構造テンプレート
+
+## 基本構造
+```
+{date}_{type}_{name}/
+├── 01_planning/
+│   ├── brief.md
+│   ├── timeline.md
+│   └── resources.md
+├── 02_execution/
+│   ├── progress.md
+│   ├── deliverables/
+│   └── notes.md
+├── 03_review/
+│   ├── review_notes.md
+│   ├── feedback.md
+│   └── improvements.md
+└── 04_completion/
+    ├── final_report.md
+    ├── lessons_learned.md
+    └── next_steps.md
+```
+
+## メタデータ
+- プロジェクト名
+- ブランド
+- 開始日
+- 完了日
+- ステータス
+- 担当者
+EOF
+
+    # Notion出力テンプレート
+    cat > .system/templates/notion_page.md << 'EOF'
+# {{title}}
+
+**作成日**: {{date}}
+**ブランド**: {{brand}}
+**カテゴリ**: {{category}}
+
+## 概要
+{{summary}}
+
+## 詳細
+{{content}}
+
+## 関連情報
+- プロジェクト: {{project_link}}
+- ナレッジ: {{knowledge_link}}
+
+---
+*このページは自動生成されました*
+EOF
+    
+    log_success "システムテンプレート配置完了"
 }
 
 # スクリプト作成
@@ -506,6 +706,106 @@ if __name__ == "__main__":
         print("Usage: python init_brand.py <brand_name>")
         sys.exit(1)
     init_brand(sys.argv[1])
+EOF
+
+    # ブランド情報同期スクリプト
+    cat > scripts/sync_brand_info.py << 'EOF'
+#!/usr/bin/env python3
+"""ブランド情報同期スクリプト"""
+import sys
+import os
+import yaml
+from pathlib import Path
+from datetime import datetime
+
+def sync_brand_info(brand_name, project_path):
+    root = Path.cwd()
+    brand_dir = root / "brands" / brand_name
+    project_dir = Path(project_path)
+    
+    # プロジェクト情報読み込み
+    if not project_dir.exists():
+        print(f"❌ プロジェクトディレクトリが見つかりません: {project_path}")
+        return
+    
+    # ブランド情報更新
+    profile_file = brand_dir / "profile.yaml"
+    if profile_file.exists():
+        with open(profile_file, "r", encoding="utf-8") as f:
+            profile = yaml.safe_load(f) or {}
+    else:
+        profile = {"brand": {"name": brand_name}}
+    
+    # プロジェクト履歴追加
+    if "projects" not in profile:
+        profile["projects"] = []
+    
+    project_info = {
+        "name": project_dir.name,
+        "path": str(project_dir.relative_to(root)),
+        "completed": datetime.now().strftime("%Y-%m-%d")
+    }
+    profile["projects"].append(project_info)
+    
+    # 保存
+    with open(profile_file, "w", encoding="utf-8") as f:
+        yaml.dump(profile, f, allow_unicode=True, sort_keys=False)
+    
+    print(f"✅ ブランド '{brand_name}' の情報を更新しました")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Usage: python sync_brand_info.py <brand_name> <project_path>")
+        sys.exit(1)
+    sync_brand_info(sys.argv[1], sys.argv[2])
+EOF
+
+    # Notion出力スクリプト
+    cat > scripts/export_to_notion.py << 'EOF'
+#!/usr/bin/env python3
+"""Notion出力スクリプト"""
+import sys
+import os
+from pathlib import Path
+from datetime import datetime
+
+def export_to_notion(source_file, title, brand, category):
+    root = Path.cwd()
+    notion_dir = root / "exports" / "notion" / "pages"
+    
+    # 出力ファイル名生成
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"{timestamp}_{title.replace(' ', '_').lower()}.md"
+    output_path = notion_dir / filename
+    
+    # ソースファイル読み込み
+    with open(source_file, "r", encoding="utf-8") as f:
+        content = f.read()
+    
+    # Notion用フォーマット
+    notion_content = f"""# {title}
+
+**作成日**: {datetime.now().strftime('%Y-%m-%d')}
+**ブランド**: {brand}
+**カテゴリ**: {category}
+
+{content}
+
+---
+*このページは自動生成されました*
+"""
+    
+    # 出力
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(notion_content)
+    
+    print(f"✅ Notion用ページを作成しました: {output_path}")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 5:
+        print("Usage: python export_to_notion.py <source_file> <title> <brand> <category>")
+        sys.exit(1)
+    export_to_notion(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
 EOF
 
     # ナレッジ管理スクリプト
@@ -579,7 +879,7 @@ EOF
 # 初期ファイル作成
 create_initial_files() {
     # ブランドテンプレート
-    cat > brands/_template/info.yaml << 'EOF'
+    cat > brands/_template/profile.yaml << 'EOF'
 brand:
   name: "{{brand_name}}"
   created: "{{date}}"
@@ -600,12 +900,12 @@ tags: []
 EOF
     
     # .gitkeepファイル
-    touch workspace/projects/active/.gitkeep
-    touch workspace/projects/done/.gitkeep
-    touch workspace/operations/.gitkeep
-    touch exports/reports/.gitkeep
-    touch exports/guidelines/.gitkeep
-    touch exports/presentations/.gitkeep
+    touch exports/notion/pages/.gitkeep
+    touch exports/documents/reports/.gitkeep
+    touch exports/documents/guidelines/.gitkeep
+    touch exports/documents/presentations/.gitkeep
+    touch brands/_template/knowledge/.gitkeep
+    touch brands/_template/projects/.gitkeep
     
     log_success "初期ファイル作成完了"
 }
@@ -642,15 +942,18 @@ show_completion_message() {
     echo "✅ すべての環境構築が完了しました"
     echo
     echo "📁 作成された構造:"
-    echo "  • workspace/   - 作業領域"
-    echo "  • brands/      - ブランド管理"
-    echo "  • knowledge/   - ナレッジベース"
-    echo "  • exports/     - 共有用出力"
+    echo "  • .cursor/rules/ - 動的ルールシステム"
+    echo "  • .system/       - システム管理"
+    echo "  • brands/        - ブランド管理（連動型）"
+    echo "  • projects/      - 統一プロジェクト構造"
+    echo "  • knowledge/     - グローバルナレッジ"
+    echo "  • exports/       - 出力管理（Notion連携）"
     echo
     echo "🚀 使い方:"
     echo "  1. Cursorのチャットで「新規プロジェクト」"
-    echo "  2. 「戦略」「記事」「分析」など入力"
-    echo "  3. 「ナレッジ追加」で知見を保存"
+    echo "  2. 段階的承認フローで確認を取りながら進行"
+    echo "  3. プロジェクト完了時に自動でブランド情報更新"
+    echo "  4. Notion出力でドキュメント共有"
     echo
     echo "📖 詳細はREADME.mdをご覧ください"
 }

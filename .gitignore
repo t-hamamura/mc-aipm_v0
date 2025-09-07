@@ -1,17 +1,16 @@
-# Work in progress
-workspace/projects/active/*
-workspace/operations/*/*
-!workspace/projects/active/.gitkeep
-!workspace/operations/.gitkeep
+# Work in progress (v2.0改変版)
+projects/*/
+!projects/.gitkeep
 
 # Personal data
 brands/*/
 !brands/_template/
 
 # Exports (may contain sensitive data)
-exports/*/
-!exports/.gitkeep
-!exports/*/.gitkeep
+exports/notion/pages/*
+exports/documents/*
+!exports/notion/pages/.gitkeep
+!exports/documents/*/.gitkeep
 
 # Backup
 _backup/
@@ -58,6 +57,10 @@ Thumbs.db
 *~
 .vscode/*
 !.vscode/settings.json
+
+# System files (v2.0改変版)
+.system/config/*
+!.system/config/.gitkeep
 
 # Logs
 *.log
